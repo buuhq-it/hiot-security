@@ -7,13 +7,6 @@ from datetime import datetime
 
 from rules import check_rules
 
-# MQTT config
-# MQTT_BROKER = "localhost"
-# MQTT_PORT = 1883
-# MQTT_TOPIC = "paper_wifi/test/#"
-# MQTT_USERNAME = "iot"
-# MQTT_PASSWORD = "Password123"
-
 # Hàm khi nhận tin nhắn
 def on_message(client, userdata, msg):
     try:
@@ -33,10 +26,10 @@ client.username_pw_set(config.MQTT_USERNAME, config.MQTT_PASSWORD)
 
 client.on_message = on_message
 
-client.connect(MQTT_BROKER, MQTT_PORT)
+# client.connect(MQTT_BROKER, MQTT_PORT)
 client.connect(config.MQTT_BROKER, config.MQTT_PORT)
 
 client.subscribe(f"{config.TOPIC_PREFIX}/#")
 
-print(f"🔎 Detector đang lắng nghe topic `{MQTT_TOPIC}` ...")
+print(f"🔎 Detector đang lắng nghe topic {config.TOPIC_PREFIX}/# ...")
 client.loop_forever()
