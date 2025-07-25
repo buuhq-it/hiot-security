@@ -5,13 +5,15 @@ import json
 import config
 from datetime import datetime
 
-from rules import check_rules
+from security_detector import rules
+
+
 
 # Hàm khi nhận tin nhắn
 def on_message(client, userdata, msg):
     try:
         payload = json.loads(msg.payload.decode())
-        alerts = check_rules(payload)
+        alerts = rules.check_rules(payload)
 
         if alerts:
             print(f"[{datetime.now().isoformat()}] 📣 PHÁT HIỆN BẤT THƯỜNG:")
