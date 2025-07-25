@@ -1,14 +1,21 @@
 # detector.py
+import time, json
+from datetime import datetime
 
 import paho.mqtt.client as mqtt
-import json
 import config
-from datetime import datetime
 
 from security_detector import rules
 
-
-
+def publish_alert(client, device_id, alert_type, message):
+    alert_payload = {
+        "device_id": device_id,
+        "alert_type": alert_type,
+        "message": message,
+        "timestamp": time.time()
+    }
+    client.publish(f"{config.TOPIC_PREFIX}/detector", json.dumps(alert_payload))
+    
 # Hàm khi nhận tin nhắn
 def on_message(client, userdata, msg):
     try:
@@ -19,6 +26,7 @@ def on_message(client, userdata, msg):
             print(f"[{datetime.now().isoformat()}] 📣 PHÁT HIỆN BẤT THƯỜNG:")
             for alert in alerts:
                 print(" 🔴", alert)
+                publish_alert(client, payload.get("device_id", "unknown"), "SECURITY_ALERT", alert)
     except Exception as e:
         print("⚠️ Lỗi khi xử lý dữ liệu:", e)
 

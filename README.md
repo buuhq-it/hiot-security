@@ -65,4 +65,11 @@ from(bucket: "some_data")
   r.device_id == "cam-001" and
   r._field == "motion_detected"
 )
+
+
+from(bucket: "some_data")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r.topic == "iot/secure/detector")
+  |> pivot(rowKey:["_time"], columnKey:["_field"], valueColumn:"_value")
+
 ```
